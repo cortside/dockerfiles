@@ -1,14 +1,25 @@
 version: 1.0.{build}
-image: Visual Studio 2017
+image: Windows Server 2019
 
+# Uncomment to debug via RDP
+# init:
+#   - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+# 
+# on_finish:
+#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
+install:
+  - ps: Write-Host Server version $(gp 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion').BuildLabEx
+  - ps: .\docker-login.ps1
+  - docker version
+  
 environment:
   DOCKER_USER: corts    
   DOCKER_PASS:
     secure: ATrglohIlg/NHRCeHMytmg==
     
-install:
-  - ps: .\update-docker-ce.ps1
-  - ps: .\docker-login.ps1
+#install:
+#  - ps: .\update-docker-ce.ps1
 #  - ps: docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
 
 build_script:
