@@ -1,4 +1,6 @@
-FROM microsoft/windowsservercore
+ARG OSVERSION
+
+FROM mcr.microsoft.com/windows/servercore:$OSVERSION
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'SilentlyContinue';"]
 ARG VERSION
