@@ -2,5 +2,11 @@
 
 Write-Host "Building cortside/${image}:${version}"
 
-docker build --build-arg VERSION=${version} --build-arg OSVERSION=${osVersion} -t cortside/${image}:latest -f Dockerfile .
-docker tag cortside/${image}:latest cortside/${image}:${version}
+$osVersion = "1803"
+docker build --build-arg VERSION=${version} --build-arg OSVERSION=${osVersion} -t cortside/${image}:${version}-${osVersion} -f Dockerfile .
+
+$osVersion = "1809"
+docker build --build-arg VERSION=${version} --build-arg OSVERSION=${osVersion} -t cortside/${image}:${version}-${osVersion} -f Dockerfile .
+
+$osVersion = "1903"
+docker build --build-arg VERSION=${version} --build-arg OSVERSION=${osVersion} -t cortside/${image}:${version}-${osVersion} -f Dockerfile .
