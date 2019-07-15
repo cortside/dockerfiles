@@ -8,5 +8,5 @@ docker build --isolation hyperv --build-arg VERSION=${version} --build-arg OSVER
 $osVersion = "1809"
 docker build --build-arg VERSION=${version} --build-arg OSVERSION=${osVersion} -t cortside/${image}:${version}-${osVersion} -f Dockerfile .
 
-$osVersion = "1903"
+$osVersion = "ltsc2019"
 docker build --build-arg VERSION=${version} --build-arg OSVERSION=${osVersion} -t cortside/${image}:${version}-${osVersion} -f Dockerfile .
