@@ -1,0 +1,7 @@
+#!/bin/bash
+
+## start nginx (kept getting errors in supervisord that port was in use, restarts?)
+service nginx start
+
+## start start supervisor to manage all of the processes
+/usr/bin/supervisord
