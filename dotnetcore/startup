@@ -1,12 +1,4 @@
 #!/bin/sh
-## start nginx (kept getting errors in supervisord that port was in use, restarts?)
-#nginx -g "daemon off;"
 
-#/etc/init.d/nginx start
-#rc-service nginx start
-
-#/usr/sbin/nginx -c /etc/nginx/nginx.conf
 ## start start supervisor to manage all of the processes
 /usr/bin/supervisord
-
-sleep 3600
