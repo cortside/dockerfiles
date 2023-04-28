@@ -1,10 +1,6 @@
 ## https://www.appveyor.com/docs/appveyor-yml/
-#image: Visual Studio 2022
 image: Ubuntu2004
 version: 1.0.{build}
-
-configuration:
-- Debug
 
 platform: Any CPU
 
@@ -22,34 +18,9 @@ init:
 - ps: Get-ChildItem "Env:"
 - ps: docker login -u="$env:DOCKER_USER" -p="$env:DOCKER_PASS"
 
-assembly_info:
-  patch: true
-  file: '**\AssemblyInfo.*'
-  assembly_version: '{version}'
-  assembly_file_version: '{version}'
-  assembly_informational_version: '{version}'
-
-before_build:
-- set DNX_BUILD_VERSION=%APPVEYOR_BUILD_NUMBER%
-- dotnet --info
-
-build:
-  publish_nuget: true
-  publish_nuget_symbols: true
-  use_snupkg_format: true 
-  include_nuget_references: true
-  verbosity: minimal
-
 build_script:
 - ps: >-
     $buildNumber = $env:APPVEYOR_BUILD_NUMBER;
     $branch = $env:APPVEYOR_REPO_BRANCH;
     .\build-dockerimages.ps1 -buildCounter $buildNumber -pushImage;
     docker images;
-
-cache:
-- '%USERPROFILE%\.nuget\packages'
-  
-nuget:
-  disable_publish_on_pr: true
- 
