@@ -28,8 +28,8 @@ Function Invoke-Exe {
 		[parameter(Mandatory = $true)][string] $args
 
 	)
-	Write-Host "Executing: `"$cmd`" --% $args"
-	Invoke-Expression "& `"$cmd`" --% $args"
+	Write-Host "Executing: `"$cmd`" $args"
+	Invoke-Expression "& `"$cmd`" $args"
 	$result = Get-Result
 }
 
