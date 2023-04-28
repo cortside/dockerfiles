@@ -5,6 +5,12 @@ ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 ENV ASPNETCORE_URLS=http://+:5000
 ENV ASPNETCORE_ENVIRONMENT=Deployment
 
+COPY startup.sh /startup.sh
+
+RUN chmod a+x /startup.sh
+RUN mkdir /app
+RUN chmod a+rw /app
+
 RUN sed -i 's/https/http/g' /etc/apk/repositories && \
     addgroup -S -g 2001 user && adduser -S -u 2001 -s /bin/bash -G user user && \
     apk update && \
@@ -12,7 +18,7 @@ RUN sed -i 's/https/http/g' /etc/apk/repositories && \
     # powershell extra dependencies
     less ncurses-terminfo-base krb5-libs libgcc libintl libssl1.1 libstdc++ userspace-rcu zlib && \
     # product-api expects running timezone to be MT for now
-    ln -sf /usr/share/zoneinfo/US/Mountain /etc/localtime && \
+    #ln -sf /usr/share/zoneinfo/US/Mountain /etc/localtime && \
     update-ca-certificates
 
 # install powershell
