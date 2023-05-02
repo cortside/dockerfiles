@@ -16,7 +16,7 @@ RUN sed -i 's/https/http/g' /etc/apk/repositories && \
     apk update && \
     apk add --no-cache jq bash curl ca-certificates tzdata icu-libs openssl \
     # powershell extra dependencies
-    less ncurses-terminfo-base krb5-libs libgcc libintl libssl1.1 libstdc++ userspace-rcu zlib && \
+    less ncurses-terminfo-base krb5-libs libgcc libintl libssl1.1 libstdc++ userspace-rcu zlib nano && \
     # product-api expects running timezone to be MT for now
     #ln -sf /usr/share/zoneinfo/US/Mountain /etc/localtime && \
     update-ca-certificates
