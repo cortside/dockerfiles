@@ -9,7 +9,7 @@ RUN dotnet --info
 #COPY ./certs/* /usr/local/share/ca-certificates/
 RUN sed -i 's/https/http/g' /etc/apk/repositories && \
     apk update && \
-    apk add --no-cache ca-certificates bash openjdk11 nss nano && \
+    apk add --no-cache ca-certificates bash openjdk17 nss nano && \
     update-ca-certificates
 
 ## install additional dotnet tools
