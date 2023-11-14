@@ -1,5 +1,5 @@
 # use the sdk to build/test, but later we'll use runtime for published image
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 ARG buildconfiguration
 ARG nugetfeed
 ARG sonarscannerversion
