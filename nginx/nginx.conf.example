@@ -56,7 +56,7 @@ server {
         add_header Content-Type application/json;
 
         access_log off;
-		set $health = '{"service":"{{service}}","status":"OK","healthy":true,"timestamp":"${time_iso8601}","build":{"timestamp":"{{timestamp}}","version":"{{version}}","tag":"{{tag}}","suffix":"{{suffix}}"}}\n';
+		set $health '{"service":"{{service}}","status":"OK","healthy":true,"timestamp":"${time_iso8601}","build":{"timestamp":"{{timestamp}}","version":"{{version}}","tag":"{{tag}}","suffix":"{{suffix}}"}}\n';
         return 200 $health;
     }
 
