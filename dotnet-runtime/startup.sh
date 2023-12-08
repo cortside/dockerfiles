@@ -2,9 +2,9 @@
 
 ifconfig
 if [[ -d /settings/$SERVICE_NAME/app ]]; then
-	/bin/cp -R -nf /settings/$SERVICE_NAME/* /
+	/bin/cp --verbose -R /settings/$SERVICE_NAME/* /
 else
-	/bin/cp -R -nf /settings/$SERVICE_NAME/* /app
+	/bin/cp --verbose -R /settings/$SERVICE_NAME/* /app
 fi
 
 if [[ -f /app/init.sh ]]; then
