@@ -2,7 +2,7 @@
 
 ifconfig
 if [[ -d /settings/$SERVICE_NAME ]]; then
-	cp -R /settings/$SERVICE_NAME/* /app 
+	/bin/cp -R -nf /settings/$SERVICE_NAME/* /app
 fi
 
 if [[ -f /app/init.sh ]]; then
