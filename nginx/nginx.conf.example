@@ -56,7 +56,8 @@ server {
         add_header Content-Type application/json;
 
         access_log off;
-        return 200 '{"service":"shoppingcart-web","status":"OK","healthy":true,"timestamp":"null","build":{"timestamp":"null","version":"null","tag":"null","suffix":"null"}}\n';
+		set $health '{"service":"{{service}}","status":"OK","healthy":true,"timestamp":"${time_iso8601}","build":{"timestamp":"{{timestamp}}","version":"{{version}}","tag":"{{tag}}","suffix":"{{suffix}}"}}\n';
+        return 200 $health;
     }
 
 }
