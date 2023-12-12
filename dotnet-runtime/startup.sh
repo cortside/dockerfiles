@@ -11,4 +11,6 @@ if [[ -f /app/init.sh ]]; then
 	/app/init.sh
 fi
 
-./$SERVICE_EXECUTABLE
+if [ -z "${SERVICE_EXECUTABLE}" ]; then
+	./$SERVICE_EXECUTABLE
+fi
