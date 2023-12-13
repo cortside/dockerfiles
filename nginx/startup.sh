@@ -1,8 +1,10 @@
 #!/bin/bash
 
 ifconfig
-if [[ -d /settings/$SERVICE_NAME ]]; then
-	cp -R /settings/$SERVICE_NAME/* /app 
+if [[ -d /settings/$SERVICE_NAME/app ]]; then
+        /bin/cp --verbose -R /settings/$SERVICE_NAME/* /
+else
+        /bin/cp --verbose -R /settings/$SERVICE_NAME/* /app
 fi
 
 if [[ -f /app/init.sh ]]; then
