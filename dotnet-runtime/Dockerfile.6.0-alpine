@@ -29,8 +29,8 @@ RUN curl -L https://github.com/PowerShell/PowerShell/releases/download/v7.3.9/po
     ln -s /opt/microsoft/powershell/7/pwsh /usr/bin/pwsh
 	
 RUN pwsh -Command [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; 
-RUN pwsh -Command Install-PackageProvider -Name PowershellGet -Force -Scope CurrentUser;
-RUN pwsh -Command Install-Module -Name SqlServer -AllowClobber -Force -Scope CurrentUser;
+RUN pwsh -Command Install-PackageProvider -Name PowershellGet -Force;
+RUN pwsh -Command Install-Module -Name SqlServer -AllowClobber -Force;
 RUN pwsh -Command Import-Module SqlServer
 
 WORKDIR /app
