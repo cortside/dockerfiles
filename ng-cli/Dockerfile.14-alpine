@@ -4,7 +4,7 @@ FROM trion/ng-cli-e2e:14.2.1 as base
 
 # Take care of certificates so we can "dotnet restore" in VDI.
 #COPY ./certs/* /usr/local/share/ca-certificates/
-RUN apt-get update && apt-get -y install ca-certificates dos2unix openjdk-17-jdk nano && rm -rf /var/cache/apk/* && \
+RUN apt-get update && apt-get -y install ca-certificates dos2unix default-jdk nano && rm -rf /var/cache/apk/* && \
     update-ca-certificates && \
     npm install -g npm@6.14.8 && \
     npm install -g @angular/cli@14.0.4 && \
