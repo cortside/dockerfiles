@@ -1,6 +1,6 @@
 # Stage 0, based on Node.js, to build and compile Angular https://github.com/mark-adams/docker-chromium-xvfb
 # This image is built to run Karma+Headless chrome and comes pre-installed for node.
-FROM trion/ng-cli-e2e:14.2.1 as base
+FROM trion/ng-cli-e2e:14.2.9 as base
 
 # Take care of certificates so we can "dotnet restore" in VDI.
 #COPY ./certs/* /usr/local/share/ca-certificates/
