@@ -6,14 +6,15 @@ ARG sonarscannerversion
 
 RUN dotnet --info
 
-#COPY ./certs/* /usr/local/share/ca-certificates/
-RUN sed -i 's/https/http/g' /etc/apk/repositories && \
-    apk update && \
+## copy certs
+COPY ./certs/* /usr/local/share/ca-certificates/
+
+RUN apk update && \
     apk add --no-cache ca-certificates bash openjdk17 nss nano && \
     update-ca-certificates
 
 ## install additional dotnet tools
-RUN dotnet tool install --global dotnet-sonarscanner --version 5.14.0
+RUN dotnet tool install --global dotnet-sonarscanner
 ENV PATH="${PATH}:/root/.dotnet/tools"
 
 WORKDIR /app/src

@@ -84,6 +84,8 @@ Write-Host Changed files:
 
 $dirs = @{}
 
+#TODO needs to change now that dockerfiles are under images
+#docker image inspect --format '{{.Created}}' cortside/dotnet-sdk:6.0-alpine
 $files | ForEach-Object {
   Write-Host $_
   $dir = $_ -replace "\/[^\/]+$", ""
@@ -101,12 +103,15 @@ $files | ForEach-Object {
   }
 }
 
-$dirs.GetEnumerator() | Sort-Object Name | ForEach-Object {
-  $dir = $_.Name
-  Write-Host Building in directory $dir
-  #pushd $dir
-  #.\build.ps1
+$dirs = @{}
+$dirs.Set_Item("images/dotnet-sdk", 1)
+$dirs.Set_Item("images/dotnet-runtime", 1)
+$dirs.Set_Item("images/ng-cli", 1)
+$dirs.Set_Item("images/nginx", 1)
 
+$dirs.GetEnumerator() | Sort-Object Name | ForEach-Object {
+	$dir = $_.Name
+	Write-Host Building in directory $dir
 	#Run Build for all Dockerfiles in /Docker path
 	$dockerFiles = Get-ChildItem -Path $dir -Filter "Dockerfile.*" -Recurse
 	foreach ($dockerfile in $dockerFiles) {
@@ -115,7 +120,8 @@ $dirs.GetEnumerator() | Sort-Object Name | ForEach-Object {
 
 		$image = Split-Path -Path $dockerfile.DirectoryName -Leaf -Resolve
 		$imageversion = $dockerfile.Name.replace('Dockerfile.','')
-		$dockerbuildargs = "build --rm -t ${acr}/${image}:${BuildNumber}-${imageversion} -t ${acr}/${image}:${imageversion} -f $($dockerfile.FullName) $($dockerfile.DirectoryName)"
+		
+		$dockerbuildargs = "build --rm -t ${acr}/${image}:${BuildNumber}-${imageversion} -t ${acr}/${image}:${imageversion} -f $($dockerfile.FullName) $($dockerfile.Directory.Parent.FullName)"
 		Invoke-Exe -cmd docker -args $dockerbuildargs
 
 		#Docker push images to repo
@@ -134,6 +140,7 @@ $dirs.GetEnumerator() | Sort-Object Name | ForEach-Object {
 		#List images for the current tag
 		Write-Output "Docker Just successfully built - ${acr}/${image}:${imageversion}"
 	}
-
-  #popd
 }
+
+# show created images
+docker images | Select-String $acr

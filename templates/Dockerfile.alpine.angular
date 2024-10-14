@@ -1,0 +1,99 @@
+ARG buildimage
+ARG runtimeimage
+
+# Stage 0, based on Node.js, to build and compile Angular https://github.com/mark-adams/docker-chromium-xvfb
+# This image is built to run Karma+Headless chrome and comes pre-installed for node.
+FROM $buildimage as base
+ARG buildconfiguration
+ARG publishableProject
+ARG polarisaccesstoken
+ARG service_name
+ARG branch
+ARG commit
+ARG commitdate
+
+WORKDIR /app
+
+# copy source
+COPY package.json /app/
+COPY package-lock.json /app/
+COPY ./ /app/
+COPY cypress.build.json /app/cypress.json
+COPY ./cypress/plugins/ /app/cypress/plugins/
+RUN echo "{}" > /app/src/config.user.json
+
+# restore and run lint check
+RUN npm ci
+RUN ng lint
+
+# gathering components from NPM install for unit testing
+#FROM base as test
+ARG branch
+ARG organization
+ARG sonarhost
+ARG sonartoken
+ARG sonarkey
+ARG sonarscannerversion
+ARG imageversion
+ARG analysisArgs
+
+RUN echo "{}" > ./src/config.local.json
+RUN npm run build
+RUN npm run test:ci
+
+RUN export coveragefiles="$(find `pwd`/coverage -name lcov.info | tr '\n' ',')" && echo $coveragefiles \
+  && echo "analysisArgs=$analysisArgs" \
+  && sonar-scanner \
+  -Dsonar.organization=$organization \
+  -Dsonar.projectKey="$sonarkey" \
+  -Dsonar.projectVersion="$imageversion" \
+  $analysisArgs \
+  -Dsonar.host.url="$sonarhost" \
+  -Dsonar.login="$sonartoken" \
+  -Dsonar.sources="src" \
+  -Dsonar.typescript.lcov.reportPaths="$coveragefiles" \
+  -Dsonar.exclusions="**/node_modules/**,**/*spec.ts,**/test.ts" \
+  $targetArg \
+  -Dsonar.tests="src" \
+  -Dsonar.test.inclusions=**/*.spec.ts \
+  -Dsonar.sourceEncoding="UTF-8"
+
+
+# run tests
+RUN npm run test-ci
+RUN npm run cy-ci
+
+# build in prep for published assets
+RUN ng build
+RUN ng build --aot --configuration production
+
+# Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
+FROM $runtimeimage as publish
+ARG publishableProject
+ARG service_name
+ARG version
+ARG imageversion
+ARG branchTag
+
+ENV SERVICE_NAME=$service_name
+ENV configpath /usr/share/nginx/html/config.json
+
+COPY --from=base /app/"$publishableProject"/ /usr/share/nginx/html
+COPY --from=base /cypress-artifacts /cypress-artifacts
+
+COPY ./deploy/startup.sh /startup.sh
+COPY ./deploy/nginx.conf.example /etc/nginx/conf.d/default.conf 
+
+RUN chmod a+x /startup.sh
+RUN chmod -R a+rw /usr/share/nginx/html
+
+# update location variables for health status
+RUN sed -i "s/{{service}}/"$service_name"/g" /etc/nginx/conf.d/default.conf
+RUN sed -i "s/{{timestamp}}/$(date -u +"%Y-%m-%dT%H:%M:%SZ")/g" /etc/nginx/conf.d/default.conf
+RUN sed -i "s/{{version}}/$version/g" /etc/nginx/conf.d/default.conf
+RUN sed -i "s/{{tag}}/$imageversion/g" /etc/nginx/conf.d/default.conf
+RUN sed -i "s/{{suffix}}/"$branchTag"/g" /etc/nginx/conf.d/default.conf
+
+USER user
+EXPOSE 8080/tcp
+CMD ["/startup.sh"]
