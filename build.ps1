@@ -104,10 +104,11 @@ $files | ForEach-Object {
 }
 
 $dirs = @{}
-$dirs.Set_Item("images/dotnet-sdk", 1)
-$dirs.Set_Item("images/dotnet-runtime", 1)
-$dirs.Set_Item("images/ng-cli", 1)
+#$dirs.Set_Item("images/dotnet-sdk", 1)
+#$dirs.Set_Item("images/dotnet-runtime", 1)
+#$dirs.Set_Item("images/ng-cli", 1)
 $dirs.Set_Item("images/nginx", 1)
+$dirs.Set_Item("images/react", 1)
 
 $dirs.GetEnumerator() | Sort-Object Name | ForEach-Object {
 	$dir = $_.Name
