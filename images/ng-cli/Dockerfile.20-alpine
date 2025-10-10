@@ -11,7 +11,7 @@ RUN apt-get update && apt-get -y install ca-certificates dos2unix openjdk-17-jre
 
 RUN npm install -g npm@^11.6.2
 RUN npm install -g @angular/cli@20.3.5
-RUN npm install -g sonarqube-scanner@3.4.2
+RUN npm install -g sonarqube-scanner@3.4.0
 
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 ENV PATH=$JAVA_HOME/bin:$PATH
