@@ -1,0 +1,23 @@
+# Stage 0, based on Node.js, to build and compile Angular https://github.com/mark-adams/docker-chromium-xvfb
+# This image is built to run Karma+Headless chrome and comes pre-installed for node.
+FROM trion/ng-cli-e2e:20.3.5 AS base
+
+USER root
+
+# Take care of certificates so we can "dotnet restore" in VDI.
+#COPY ./certs/* /usr/local/share/ca-certificates/
+RUN apt-get update && apt-get -y install ca-certificates dos2unix openjdk-17-jre nano && rm -rf /var/cache/apk/* && \
+    update-ca-certificates 
+
+RUN npm install -g npm@^11.6.2
+RUN npm install -g @angular/cli@20.3.5
+RUN npm install -g sonarqube-scanner@3.4.2
+
+ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+#ENV NODE_EXTRA_CA_CERTS="/usr/local/share/ca-certificates/cert.crt"
+
+RUN sonar-scanner --version
+
+USER 1000
